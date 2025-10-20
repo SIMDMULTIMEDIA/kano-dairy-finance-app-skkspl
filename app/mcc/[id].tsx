@@ -104,6 +104,17 @@ export default function MCCDetailsScreen() {
           </View>
         </View>
 
+        {/* Add Record Button - Always Visible */}
+        <View style={styles.addButtonContainer}>
+          <Pressable
+            style={[styles.addButton, { backgroundColor: colors.primary }]}
+            onPress={handleAddNew}
+          >
+            <IconSymbol name="plus.circle.fill" color="#ffffff" size={24} />
+            <Text style={styles.addButtonText}>Add New Record</Text>
+          </Pressable>
+        </View>
+
         <ScrollView 
           style={styles.recordsList}
           contentContainerStyle={styles.recordsListContent}
@@ -117,63 +128,68 @@ export default function MCCDetailsScreen() {
                 No records yet
               </Text>
               <Text style={[styles.emptySubtext, { color: colors.textSecondary }]}>
-                Tap the + button to add your first record
+                Tap the &quot;Add New Record&quot; button above to create your first financial record
               </Text>
             </View>
           ) : (
-            records.map((record) => (
-              <View key={record.id} style={[styles.recordCard, { backgroundColor: theme.colors.card }]}>
-                <View style={styles.recordHeader}>
-                  <Text style={[styles.recordDate, { color: colors.textSecondary }]}>
-                    {formatDate(record.date)}
-                  </Text>
-                  <View style={styles.recordActions}>
-                    <Pressable onPress={() => handleEdit(record)} style={styles.actionButton}>
-                      <IconSymbol name="pencil" color={colors.primary} size={20} />
-                    </Pressable>
-                    <Pressable onPress={() => handleDelete(record)} style={styles.actionButton}>
-                      <IconSymbol name="trash" color={colors.error} size={20} />
-                    </Pressable>
+            <>
+              <Text style={[styles.recordsHeader, { color: theme.colors.text }]}>
+                Financial Records ({records.length})
+              </Text>
+              {records.map((record) => (
+                <View key={record.id} style={[styles.recordCard, { backgroundColor: theme.colors.card }]}>
+                  <View style={styles.recordHeader}>
+                    <Text style={[styles.recordDate, { color: colors.textSecondary }]}>
+                      {formatDate(record.date)}
+                    </Text>
+                    <View style={styles.recordActions}>
+                      <Pressable onPress={() => handleEdit(record)} style={styles.actionButton}>
+                        <IconSymbol name="pencil" color={colors.primary} size={20} />
+                      </Pressable>
+                      <Pressable onPress={() => handleDelete(record)} style={styles.actionButton}>
+                        <IconSymbol name="trash" color={colors.error} size={20} />
+                      </Pressable>
+                    </View>
                   </View>
-                </View>
 
-                <Text style={[styles.recordDescription, { color: theme.colors.text }]}>
-                  {record.description}
-                </Text>
-
-                <View style={styles.recordCategory}>
-                  <IconSymbol name="tag" color={colors.textSecondary} size={14} />
-                  <Text style={[styles.recordCategoryText, { color: colors.textSecondary }]}>
-                    {record.category}
+                  <Text style={[styles.recordDescription, { color: theme.colors.text }]}>
+                    {record.description}
                   </Text>
-                </View>
 
-                <View style={styles.recordAmounts}>
-                  {record.income > 0 && (
-                    <View style={styles.amountRow}>
-                      <Text style={[styles.amountLabel, { color: colors.textSecondary }]}>Income:</Text>
-                      <Text style={[styles.amountValue, { color: colors.accent }]}>
-                        {formatCurrency(record.income)}
-                      </Text>
-                    </View>
-                  )}
-                  {record.expense > 0 && (
-                    <View style={styles.amountRow}>
-                      <Text style={[styles.amountLabel, { color: colors.textSecondary }]}>Expense:</Text>
-                      <Text style={[styles.amountValue, { color: colors.error }]}>
-                        {formatCurrency(record.expense)}
-                      </Text>
-                    </View>
+                  <View style={styles.recordCategory}>
+                    <IconSymbol name="tag" color={colors.textSecondary} size={14} />
+                    <Text style={[styles.recordCategoryText, { color: colors.textSecondary }]}>
+                      {record.category}
+                    </Text>
+                  </View>
+
+                  <View style={styles.recordAmounts}>
+                    {record.income > 0 && (
+                      <View style={styles.amountRow}>
+                        <Text style={[styles.amountLabel, { color: colors.textSecondary }]}>Income:</Text>
+                        <Text style={[styles.amountValue, { color: colors.accent }]}>
+                          {formatCurrency(record.income)}
+                        </Text>
+                      </View>
+                    )}
+                    {record.expense > 0 && (
+                      <View style={styles.amountRow}>
+                        <Text style={[styles.amountLabel, { color: colors.textSecondary }]}>Expense:</Text>
+                        <Text style={[styles.amountValue, { color: colors.error }]}>
+                          {formatCurrency(record.expense)}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+
+                  {record.note && (
+                    <Text style={[styles.recordNote, { color: colors.textSecondary }]}>
+                      Note: {record.note}
+                    </Text>
                   )}
                 </View>
-
-                {record.note && (
-                  <Text style={[styles.recordNote, { color: colors.textSecondary }]}>
-                    Note: {record.note}
-                  </Text>
-                )}
-              </View>
-            ))
+              ))}
+            </>
           )}
         </ScrollView>
       </View>
@@ -188,6 +204,7 @@ const styles = StyleSheet.create({
   summaryCard: {
     padding: 16,
     margin: 16,
+    marginBottom: 8,
     borderRadius: 12,
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
     elevation: 3,
@@ -220,11 +237,37 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
   },
+  addButtonContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    gap: 10,
+    boxShadow: '0px 2px 8px rgba(0, 123, 255, 0.3)',
+    elevation: 4,
+  },
+  addButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  recordsHeader: {
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 12,
+  },
   recordsList: {
     flex: 1,
   },
   recordsListContent: {
     padding: 16,
+    paddingTop: 8,
     paddingBottom: Platform.OS === 'ios' ? 100 : 120,
   },
   recordCard: {
@@ -300,5 +343,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 8,
     textAlign: 'center',
+    paddingHorizontal: 32,
   },
 });
